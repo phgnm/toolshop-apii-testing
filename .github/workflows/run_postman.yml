@@ -16,7 +16,7 @@ jobs:
     - name: Checkout Code ⚙️
       uses: actions/checkout@v4
 
-    # Bước 2: Tạo file .env từ template .env.ci (m phải tạo sẵn file .env.ci trong API/)
+    # Bước 2: Tạo file .env từ template .env.ci
     - name: Create Laravel .env file 🔧
       env:
         APP_KEY: ${{ secrets.APP_KEY }}
@@ -61,7 +61,7 @@ jobs:
     - name: Run Newman Tests 🚀
       run: |
         mkdir -p newman-report
-        newman run favourite_collection.json \
+        newman run favourite_api_collection.json \
           -e favourite_environment.json \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export newman-report/test-report.html
