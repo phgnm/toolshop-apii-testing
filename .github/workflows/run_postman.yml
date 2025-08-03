@@ -1,29 +1,80 @@
-name: API Test with Postman
+name: Favourite API Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  run-api-tests:
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v3
+    # Bước 1: Checkout source code
+    - name: Checkout Code ⚙️
+      uses: actions/checkout@v4
 
-    - name: Install Node.js
-      uses: actions/setup-node@v3
+    # Bước 2: Tạo file .env từ template .env.ci (m phải tạo sẵn file .env.ci trong API/)
+    - name: Create Laravel .env file 🔧
+      env:
+        APP_KEY: ${{ secrets.APP_KEY }}
+        DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      run: |
+        echo "🔧 Creating Laravel .env file from .env.ci template..."
+        envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
+        echo "✅ .env file created successfully."
+
+    # Bước 3: Khởi động docker
+    - name: Start Docker Containers 🐳
+      run: docker compose up -d
+
+    # Bước 4: Đợi các service khởi động xong
+    - name: Wait for Services ⏳
+      run: sleep 60
+      shell: bash
+
+    # Bước 5: Cài đặt Laravel (composer, migrate, seed)
+    - name: Setup Application 🔧
+      run: |
+        echo "📦 Installing Composer dependencies..."
+        docker compose run --rm composer
+
+        echo "🔒 Fixing permissions..."
+        docker compose exec -T -u root laravel-api chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+        echo "🗄️ Running database migrations and seeding..."
+        docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
+
+    # Bước 6: Cài đặt Node.js và Newman
+    - name: Install Node.js & Newman ⚙️
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
+    - run: npm install -g newman newman-reporter-htmlextra
 
-    - name: Install Newman
-      run: npm install -g newman
-
-    - name: Run API Tests
+    # Bước 7: Chạy kiểm thử Newman 🚀
+    - name: Run Newman Tests 🚀
       run: |
+        mkdir -p newman-report
         newman run favourite_collection.json \
           -e favourite_environment.json \
-          --reporters cli
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export newman-report/test-report.html
+
+    # Bước 8: Upload báo cáo 📊
+    - name: Upload Test Report 📊
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: newman-html-report
+        path: newman-report/test-report.html
+
+    # Bước 9: Tắt Docker 🧹
+    - name: Cleanup 🧹
+      if: always()
+      run: docker compose down -v
