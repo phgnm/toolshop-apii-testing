@@ -1,0 +1,21 @@
+{
+  "id": "toolshop-env-id",
+  "name": "Toolshop Local (User)",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8091",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS13aXRoLWJ1Z3MucHJhY3RpY2Vzb2Z0d2FyZXRlc3RpbmcuY29tL3VzZXJzL2xvZ2luIiwiaWF0IjoxNzU0MjE0Mjg2LCJleHAiOjE3Njk4MTQyODYsIm5iZiI6MTc1NDIxNDI4NiwianRpIjoiTlE1UDJOZ2pYVDBtNlpaUiIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3Iiwicm9sZSI6InVzZXIifQ.JObiGb1ToQJINZn41s72BdEI71LAAqMB5Rdetjq3_S0",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS13aXRoLWJ1Z3MucHJhY3RpY2Vzb2Z0d2FyZXRlc3RpbmcuY29tL3VzZXJzL2xvZ2luIiwiaWF0IjoxNzU0MjE0MzI2LCJleHAiOjE3Njk4MTQzMjYsIm5iZiI6MTc1NDIxNDMyNiwianRpIjoibXBJRnBQU1JxM2lxZ0Q2ZiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3Iiwicm9sZSI6ImFkbWluIn0.jHo5SoSEVxZ6NsUpg4PDmLcZTf4JwJyxC9V6XH6flx8",
+      "enabled": true
+    }
+  ]
+}
